@@ -1,0 +1,8 @@
+{
+    "C_Cpp.default.compilerPath": "/usr/bin/clang-18",
+    "files.associations": {
+        "new": "cpp",
+        "fstream": "cpp"
+    },
+    "cmake.sourceDirectory": "/root/HUST-computer_network/模块2/SR/StopWait"
+}
