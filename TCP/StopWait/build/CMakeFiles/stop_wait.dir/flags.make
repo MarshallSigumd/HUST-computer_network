@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/root/HUST-computer_network/模块2/GBN/StopWait/include
+CXX_INCLUDES = -I/root/HUST-computer_network/模块2/TCP/StopWait/include
 
 CXX_FLAGS =   -std=c++11
 

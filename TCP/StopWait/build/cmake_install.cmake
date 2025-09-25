@@ -1,4 +1,4 @@
-# Install script for directory: /root/HUST-computer_network/模块2/GBN/StopWait
+# Install script for directory: /root/HUST-computer_network/模块2/TCP/StopWait
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -50,5 +50,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/root/HUST-computer_network/模块2/GBN/StopWait/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/root/HUST-computer_network/模块2/TCP/StopWait/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

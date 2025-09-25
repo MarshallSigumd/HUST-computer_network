@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "/root/HUST-computer_network/模块2/GBN/StopWait/bin/stop_wait"
-  "/root/HUST-computer_network/模块2/GBN/StopWait/bin/stop_wait.pdb"
+  "/root/HUST-computer_network/模块2/TCP/StopWait/bin/stop_wait"
+  "/root/HUST-computer_network/模块2/TCP/StopWait/bin/stop_wait.pdb"
   "CMakeFiles/stop_wait.dir/src/StopWait.cpp.o"
   "CMakeFiles/stop_wait.dir/src/StopWait.cpp.o.d"
   "CMakeFiles/stop_wait.dir/src/StopWaitRdtReceiver.cpp.o"
