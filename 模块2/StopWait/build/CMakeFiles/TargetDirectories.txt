@@ -1,3 +1,0 @@
-/root/HUST-computer_network/模块2/StopWait/build/CMakeFiles/stop_wait.dir
-/root/HUST-computer_network/模块2/StopWait/build/CMakeFiles/edit_cache.dir
-/root/HUST-computer_network/模块2/StopWait/build/CMakeFiles/rebuild_cache.dir
