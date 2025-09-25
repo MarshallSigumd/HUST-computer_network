@@ -13,9 +13,6 @@ struct  Configuration{
 	*/
 	static const int TIME_OUT =20;
 
-	//窗口大小
-	static const int WINDOW_SIZE = 4;	
-
 };
 
 

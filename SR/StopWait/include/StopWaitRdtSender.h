@@ -1,16 +1,12 @@
-#ifndef STOP_WAIT_RDT_SENDER_H
-#define STOP_WAIT_RDT_SENDER_H
+#pragma once
 #include "RdtSender.h"
-class GBNSender : public RdtSender
+
+class StopWaitRdtSender : public RdtSender
 {
 private:
-	int base;					  // 发送窗口的基序号
-	int nextSeqNum;				  // 下一个待发送的报文序号
 	int expectSequenceNumberSend; // 下一个发送序号
 	bool waitingState;			  // 是否处于等待Ack的状态
-
-	Packet sw[Configuration::WINDOW_SIZE]; // 发送窗口
-	int numberOfPacketsInWindow;		   // 当前在发送窗口中的报文数
+	Packet packetWaitingAck;	  // 已发送并等待Ack的数据包
 
 public:
 	bool getWaitingState();
@@ -19,8 +15,6 @@ public:
 	void timeoutHandler(int seqNum);	// Timeout handler，将被NetworkServiceSimulator调用
 
 public:
-	GBNSender();
-	virtual ~GBNSender();
+	StopWaitRdtSender();
+	virtual ~StopWaitRdtSender();
 };
-
-#endif
