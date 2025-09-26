@@ -1,12 +1,22 @@
 #pragma once
 #include "RdtSender.h"
 
-class StopWaitRdtSender : public RdtSender
+class SRSender : public RdtSender
 {
 private:
-	int expectSequenceNumberSend; // 下一个发送序号
+	const int seqSize;	  // 序号空间大小
+	const int windowSize; // 发送窗口大小
+	int base;					  // 发送窗口的基序号
+	int nextSeqNum;				  // 下一个待发送的报文序号
+	pair<bool, Packet> *window;   // 发送窗口
 	bool waitingState;			  // 是否处于等待Ack的状态
-	Packet packetWaitingAck;	  // 已发送并等待Ack的数据包
+	Packet lastAckPkt; 			  //
+
+
+private:
+	void initWindow(); // 初始化发送窗口
+	void print();	  // 打印发送窗口状态
+	bool isInWindow(int seqNum); // 判断序号是否在发送窗口内
 
 public:
 	bool getWaitingState();
@@ -15,6 +25,7 @@ public:
 	void timeoutHandler(int seqNum);	// Timeout handler，将被NetworkServiceSimulator调用
 
 public:
-	StopWaitRdtSender();
-	virtual ~StopWaitRdtSender();
+	SRSender();
+	SRSender(int seqSize, int winSize);
+	virtual ~SRSender();
 };

@@ -3,25 +3,34 @@
 #include "StopWaitRdtSender.h"
 
 
-StopWaitRdtSender::StopWaitRdtSender():expectSequenceNumberSend(0),waitingState(false)
+SRSender::SRSender():seqSize(8),windowSize(4),base(0),nextSeqNum(0),window(new pair<bool,Packet>),waitingState(false)
+{
+	initWindow();
+}
+
+SRSender::SRSender(int seqSize, int winSize):seqSize(seqSize),windowSize(winSize),base(0),nextSeqNum(0),window(new pair<bool,Packet>),waitingState(false)
+{
+	initWindow();
+}
+
+SRSender::~SRSender()
 {
 }
 
-
-StopWaitRdtSender::~StopWaitRdtSender()
-{
+void SRSender::initWindow() {
+	for (int i = 0; i < windowSize; i++) {
+		window[i].first = false; //窗口初始时均为空
+	}
 }
 
-
-
-bool StopWaitRdtSender::getWaitingState() {
+bool SRSender::getWaitingState() {
 	return waitingState;
 }
 
 
 
 
-bool StopWaitRdtSender::send(const Message &message) {
+bool SRSender::send(const Message &message) {
 	if (this->waitingState) { //发送方处于等待确认状态
 		return false;
 	}
@@ -39,7 +48,7 @@ bool StopWaitRdtSender::send(const Message &message) {
 	return true;
 }
 
-void StopWaitRdtSender::receive(const Packet &ackPkt) {
+void SRSender::receive(const Packet &ackPkt) {
 	if (this->waitingState == true) {//如果发送方处于等待ack的状态，作如下处理；否则什么都不做
 		//检查校验和是否正确
 		int checkSum = pUtils->calculateCheckSum(ackPkt);
@@ -61,7 +70,7 @@ void StopWaitRdtSender::receive(const Packet &ackPkt) {
 	}	
 }
 
-void StopWaitRdtSender::timeoutHandler(int seqNum) {
+void SRSender::timeoutHandler(int seqNum) {
 	//唯一一个定时器,无需考虑seqNum
 	pUtils->printPacket("发送方定时器时间到，重发上次发送的报文", this->packetWaitingAck);
 	pns->stopTimer(SENDER,seqNum);										//首先关闭定时器
