@@ -6,5 +6,5 @@ CXX_DEFINES =
 
 CXX_INCLUDES = -I/root/HUST-computer_network/SR/StopWait/include
 
-CXX_FLAGS = -g   -std=c++11
+CXX_FLAGS =   -std=c++11
 

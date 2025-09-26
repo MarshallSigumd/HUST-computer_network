@@ -8,9 +8,8 @@ private:
 	const int windowSize; // 发送窗口大小
 	int base;					  // 发送窗口的基序号
 	int nextSeqNum;				  // 下一个待发送的报文序号
-	pair<bool, Packet> *window;   // 发送窗口
+	pair<bool, Packet> *sendBuf;   // 发送窗口
 	bool waitingState;			  // 是否处于等待Ack的状态
-	Packet lastAckPkt; 			  //
 
 
 private:

@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/stop_wait.dir/src/StopWait.cpp.o CMakeFiles/stop_wait.dir/src/StopWaitRdtReceiver.cpp.o CMakeFiles/stop_wait.dir/src/StopWaitRdtSender.cpp.o -o /root/HUST-computer_network/SR/StopWait/bin/stop_wait  /root/HUST-computer_network/SR/StopWait/lib/libnetsim.a 

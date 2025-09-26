@@ -56,7 +56,7 @@ EQUALS = =
 CMAKE_SOURCE_DIR = /root/HUST-computer_network/SR/StopWait
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /root/HUST-computer_network/build
+CMAKE_BINARY_DIR = /root/HUST-computer_network/SR/StopWait/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/stop_wait.dir/depend.make
@@ -72,7 +72,7 @@ include CMakeFiles/stop_wait.dir/flags.make
 CMakeFiles/stop_wait.dir/src/StopWait.cpp.o: CMakeFiles/stop_wait.dir/flags.make
 CMakeFiles/stop_wait.dir/src/StopWait.cpp.o: /root/HUST-computer_network/SR/StopWait/src/StopWait.cpp
 CMakeFiles/stop_wait.dir/src/StopWait.cpp.o: CMakeFiles/stop_wait.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/root/HUST-computer_network/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/stop_wait.dir/src/StopWait.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/root/HUST-computer_network/SR/StopWait/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/stop_wait.dir/src/StopWait.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/stop_wait.dir/src/StopWait.cpp.o -MF CMakeFiles/stop_wait.dir/src/StopWait.cpp.o.d -o CMakeFiles/stop_wait.dir/src/StopWait.cpp.o -c /root/HUST-computer_network/SR/StopWait/src/StopWait.cpp
 
 CMakeFiles/stop_wait.dir/src/StopWait.cpp.i: cmake_force
@@ -86,7 +86,7 @@ CMakeFiles/stop_wait.dir/src/StopWait.cpp.s: cmake_force
 CMakeFiles/stop_wait.dir/src/StopWaitRdtReceiver.cpp.o: CMakeFiles/stop_wait.dir/flags.make
 CMakeFiles/stop_wait.dir/src/StopWaitRdtReceiver.cpp.o: /root/HUST-computer_network/SR/StopWait/src/StopWaitRdtReceiver.cpp
 CMakeFiles/stop_wait.dir/src/StopWaitRdtReceiver.cpp.o: CMakeFiles/stop_wait.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/root/HUST-computer_network/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/stop_wait.dir/src/StopWaitRdtReceiver.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/root/HUST-computer_network/SR/StopWait/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/stop_wait.dir/src/StopWaitRdtReceiver.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/stop_wait.dir/src/StopWaitRdtReceiver.cpp.o -MF CMakeFiles/stop_wait.dir/src/StopWaitRdtReceiver.cpp.o.d -o CMakeFiles/stop_wait.dir/src/StopWaitRdtReceiver.cpp.o -c /root/HUST-computer_network/SR/StopWait/src/StopWaitRdtReceiver.cpp
 
 CMakeFiles/stop_wait.dir/src/StopWaitRdtReceiver.cpp.i: cmake_force
@@ -100,7 +100,7 @@ CMakeFiles/stop_wait.dir/src/StopWaitRdtReceiver.cpp.s: cmake_force
 CMakeFiles/stop_wait.dir/src/StopWaitRdtSender.cpp.o: CMakeFiles/stop_wait.dir/flags.make
 CMakeFiles/stop_wait.dir/src/StopWaitRdtSender.cpp.o: /root/HUST-computer_network/SR/StopWait/src/StopWaitRdtSender.cpp
 CMakeFiles/stop_wait.dir/src/StopWaitRdtSender.cpp.o: CMakeFiles/stop_wait.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/root/HUST-computer_network/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/stop_wait.dir/src/StopWaitRdtSender.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/root/HUST-computer_network/SR/StopWait/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/stop_wait.dir/src/StopWaitRdtSender.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/stop_wait.dir/src/StopWaitRdtSender.cpp.o -MF CMakeFiles/stop_wait.dir/src/StopWaitRdtSender.cpp.o.d -o CMakeFiles/stop_wait.dir/src/StopWaitRdtSender.cpp.o -c /root/HUST-computer_network/SR/StopWait/src/StopWaitRdtSender.cpp
 
 CMakeFiles/stop_wait.dir/src/StopWaitRdtSender.cpp.i: cmake_force
@@ -126,7 +126,7 @@ stop_wait_EXTERNAL_OBJECTS =
 /root/HUST-computer_network/SR/StopWait/bin/stop_wait: CMakeFiles/stop_wait.dir/build.make
 /root/HUST-computer_network/SR/StopWait/bin/stop_wait: /root/HUST-computer_network/SR/StopWait/lib/libnetsim.a
 /root/HUST-computer_network/SR/StopWait/bin/stop_wait: CMakeFiles/stop_wait.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/root/HUST-computer_network/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX executable /root/HUST-computer_network/SR/StopWait/bin/stop_wait"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/root/HUST-computer_network/SR/StopWait/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX executable /root/HUST-computer_network/SR/StopWait/bin/stop_wait"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/stop_wait.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -138,6 +138,6 @@ CMakeFiles/stop_wait.dir/clean:
 .PHONY : CMakeFiles/stop_wait.dir/clean
 
 CMakeFiles/stop_wait.dir/depend:
-	cd /root/HUST-computer_network/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /root/HUST-computer_network/SR/StopWait /root/HUST-computer_network/SR/StopWait /root/HUST-computer_network/build /root/HUST-computer_network/build /root/HUST-computer_network/build/CMakeFiles/stop_wait.dir/DependInfo.cmake "--color=$(COLOR)"
+	cd /root/HUST-computer_network/SR/StopWait/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /root/HUST-computer_network/SR/StopWait /root/HUST-computer_network/SR/StopWait /root/HUST-computer_network/SR/StopWait/build /root/HUST-computer_network/SR/StopWait/build /root/HUST-computer_network/SR/StopWait/build/CMakeFiles/stop_wait.dir/DependInfo.cmake "--color=$(COLOR)"
 .PHONY : CMakeFiles/stop_wait.dir/depend
 

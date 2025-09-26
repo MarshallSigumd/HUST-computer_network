@@ -3,7 +3,7 @@
 
 # Relative path conversion top directories.
 set(CMAKE_RELATIVE_PATH_TOP_SOURCE "/root/HUST-computer_network/SR/StopWait")
-set(CMAKE_RELATIVE_PATH_TOP_BINARY "/root/HUST-computer_network/build")
+set(CMAKE_RELATIVE_PATH_TOP_BINARY "/root/HUST-computer_network/SR/StopWait/build")
 
 # Force unix paths in dependencies.
 set(CMAKE_FORCE_UNIX_PATHS 1)
