@@ -2,8 +2,7 @@
 #include "Global.h"
 #include "StopWaitRdtReceiver.h"
 
-
-StopWaitRdtReceiver::StopWaitRdtReceiver():expectSequenceNumberRcvd(0)
+TCPReceiver::TCPReceiver() : expectSequenceNumberRcvd(0)
 {
 	lastAckPkt.acknum = -1; //初始状态下，上次发送的确认包的确认序号为-1，使得当第一个接受的数据包出错时该确认报文的确认号为-1
 	lastAckPkt.checksum = 0;
@@ -14,12 +13,12 @@ StopWaitRdtReceiver::StopWaitRdtReceiver():expectSequenceNumberRcvd(0)
 	lastAckPkt.checksum = pUtils->calculateCheckSum(lastAckPkt);
 }
 
-
-StopWaitRdtReceiver::~StopWaitRdtReceiver()
+TCPReceiver::~TCPReceiver()
 {
 }
 
-void StopWaitRdtReceiver::receive(const Packet &packet) {
+void TCPReceiver::receive(const Packet &packet)
+{
 	//检查校验和是否正确
 	int checkSum = pUtils->calculateCheckSum(packet);
 
