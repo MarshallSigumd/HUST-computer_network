@@ -4,10 +4,11 @@
 class SRReceiver :public RdtReceiver
 {
 private:
-	const int seqSize = 8;		//序号空间大小
-	const int windowSize = 4;	//接收窗口大小
-	pair<bool, Packet> *recvBuf; //接收窗口
-	Packet lastAckPkt;			 //上次发送的确认报文
+	const int seqSize;		//序号空间大小
+	const int windowSize;	//接收窗口大小
+	Packet lastAckPkt;//上次发送的确认报文
+	Packet* const recvBuf;//分组缓存区s
+	bool* const bufStatus;//分组的状态
 	int base;				 //接收窗口的基序号
 
 private:

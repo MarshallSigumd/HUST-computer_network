@@ -2,12 +2,12 @@
 #include "Global.h"
 #include "StopWaitRdtReceiver.h"
 
-SRReceiver ::SRReceiver():seqSize(8),windowSize(4),recvBuf(new pair<bool,Packet>),lastAckPkt(),base(0)
+SRReceiver ::SRReceiver():seqSize(8),windowSize(4),recvBuf(new Packet[seqSize]),bufStatus(new bool[seqSize])
 {
 	initWindow();
 }
 
-SRReceiver::SRReceiver(int seqSize, int winSize):seqSize(seqSize),windowSize(winSize),recvBuf(new pair<bool,Packet>),lastAckPkt(),base(0)
+SRReceiver::SRReceiver(int seqSize, int winSize):seqSize(seqSize),windowSize(winSize),recvBuf(new Packet[seqSize]),bufStatus(new bool[seqSize])
 {
 	initWindow();
 }
@@ -19,32 +19,25 @@ SRReceiver::~SRReceiver()
 
 void SRReceiver::initWindow() {
 	base = 0;
-	for (int i = 0; i < windowSize; i++) {
-		recvBuf[i].first = false; //窗口初始时均为空
+	for (int i = 0; i < seqSize; i++) {
+		bufStatus[i] = false; //窗口初始时均为空
 	}
 	lastAckPkt.acknum = -1;
 	lastAckPkt.checksum = 0;
-	memset(lastAckPkt.payload, 0, sizeof(lastAckPkt.payload));
+	lastAckPkt.seqnum = -1;	//忽略该字段
+	memset(lastAckPkt.payload, '.', Configuration::PAYLOAD_SIZE);
 	lastAckPkt.checksum = pUtils->calculateCheckSum(lastAckPkt);
 }
 
 bool SRReceiver::isInWindow(int seqNum)//判断序号是否在接收窗口内
 {
-	if (base <= (base + windowSize - 1) % seqSize) { //窗口未环绕
-		if (seqNum >= base && seqNum <= (base + windowSize - 1) % seqSize) {
-			return true;
-		}
-		else {
-			return false;
-		}
+	if (base < (base + windowSize) % seqSize)//窗口未环绕
+	{
+		return seqNum >= base && seqNum < (base + windowSize) % seqSize;
 	}
-	else { //窗口环绕
-		if (seqNum >= base || seqNum <= (base + windowSize - 1) % seqSize) {
-			return true;
-		}
-		else {
-			return false;
-		}
+	else
+	{
+		return seqNum >= base || seqNum < (base + windowSize) % seqSize;
 	}
 }
 
@@ -60,9 +53,9 @@ void SRReceiver::print() {
 			cout << "] ";
 		if(isInWindow(i)==false)
 			cout<<"不可用 ";
-		else if(isInWindow(i)&&recvBuf[i].first==false)
+		else if(isInWindow(i)&&bufStatus[i]==false)
 			cout<<"可用未收到 ";
-		else if(isInWindow(i)&&recvBuf[i].first==true)
+		else if(isInWindow(i)&&bufStatus[i]==true)
 			cout<<"收到未交付 ";
 	}
 	cout << endl;
@@ -80,32 +73,31 @@ void SRReceiver::receive(const Packet &ackPkt)
 	{
 		if(isInWindow(ackPkt.seqnum)==false) //不在接收窗口内
 		{
-			pUtils->printPacket("SRReceiver: 收到不在接收窗口内的报文", ackPkt);
+			pUtils->printPacket("ERROR: 收到不在接收窗口内的报文", ackPkt);
 			lastAckPkt.seqnum=-1;//USELESS ,just for distinguish
 			lastAckPkt.acknum=ackPkt.seqnum;
 			lastAckPkt.checksum=pUtils->calculateCheckSum(lastAckPkt);
-			memset(lastAckPkt.payload, 0, sizeof(lastAckPkt.payload));//USELESS ,just for distinguish
-			pns->sendToNetworkLayer(RECEIVER, lastAckPkt); //向发送方发送上次的确认报文
+			memset(lastAckPkt.payload, '.', Configuration::PAYLOAD_SIZE);//USELESS ,just for distinguish
+			pns->sendToNetworkLayer(SENDER, lastAckPkt); //向发送方发送上次的确认报文
 			return;
 		}
 
 		else{
-			recvBuf[ackPkt.seqnum].first = true;
-			recvBuf[ackPkt.seqnum].second = ackPkt;
+			bufStatus[ackPkt.seqnum] = true;
+			recvBuf[ackPkt.seqnum] = ackPkt;
 			lastAckPkt.acknum = ackPkt.seqnum;
-			lastAckPkt.checksum = pUtils->calculateCheckSum(lastAckPkt);
-			lastAckPkt.seqnum = -1;//USELESS ,just for distinguish
-			memset(lastAckPkt.payload, 0, sizeof(lastAckPkt.payload));//USELESS ,just for distinguish
+			lastAckPkt.seqnum = 0;//USELESS ,just for distinguish
+			memset(lastAckPkt.payload, '.',sizeof(lastAckPkt.payload));//USELESS ,just for distinguish
 
-			pUtils->printPacket("SRReceiver: 收到正确的报文", ackPkt);
-			pns->sendToNetworkLayer(RECEIVER, ackPkt); //向上递交给应用层
-			while(recvBuf[base].first==true) //移动窗口
+			pUtils->printPacket("接收方发送ack", lastAckPkt);
+			pns->sendToNetworkLayer(SENDER, lastAckPkt); //向上递交给应用层
+			while(bufStatus[base]==true) //移动窗口
 			{
 				Message msg;
-				memcpy(msg.data, recvBuf[base].second.payload, sizeof(recvBuf[base].second.payload));
+				memcpy(msg.data, recvBuf[base].payload, sizeof(recvBuf[base].payload));
 				pns->delivertoAppLayer(RECEIVER, msg); //向上递交给应用层
-				pUtils->printPacket("SRReceiver: 向上递交给应用层的报文", recvBuf[base].second);
-				recvBuf[base].first = false; //清空该缓冲区
+				pUtils->printPacket("SRReceiver: 向上递交给应用层的报文", recvBuf[base]);
+				bufStatus[base] = false; //清空该缓冲区
 				base = (base + 1) % seqSize;
 			}
 
