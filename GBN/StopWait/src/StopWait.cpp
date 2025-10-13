@@ -16,8 +16,8 @@ int main(int argc, char *argv[])
 	pns->init();
 	pns->setRtdSender(ps);
 	pns->setRtdReceiver(pr);
-	pns->setInputFile("模块2/GBN/input.txt");
-	pns->setOutputFile("模块2/GBN/output.txt");
+	pns->setInputFile("../input.txt");
+	pns->setOutputFile("../output.txt");
 
 	pns->start();
 

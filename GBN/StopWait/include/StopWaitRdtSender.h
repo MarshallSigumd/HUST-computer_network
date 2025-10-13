@@ -1,6 +1,7 @@
 #ifndef STOP_WAIT_RDT_SENDER_H
 #define STOP_WAIT_RDT_SENDER_H
 #include "RdtSender.h"
+
 class GBNSender : public RdtSender
 {
 private:
@@ -9,8 +10,8 @@ private:
 	int expectSequenceNumberSend; // 下一个发送序号
 	bool waitingState;			  // 是否处于等待Ack的状态
 
-	Packet sw[Configuration::WINDOW_SIZE]; // 发送窗口
-	int numberOfPacketsInWindow;		   // 当前在发送窗口中的报文数
+	Packet sw[Configuration::len]; // 发送窗口
+	int numberOfPacketsInWindow;   // 当前在发送窗口中的报文数
 
 public:
 	bool getWaitingState();
