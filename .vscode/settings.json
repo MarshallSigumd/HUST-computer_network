@@ -3,7 +3,11 @@
   "files.associations": {
     "new": "cpp",
     "fstream": "cpp",
-    "ostream": "cpp"
+    "ostream": "cpp",
+    "chrono": "cpp",
+    "utility": "cpp",
+    "span": "cpp",
+    "memory": "cpp"
   },
   "cmake.sourceDirectory": "/root/HUST-computer_network/SR/StopWait",
 
