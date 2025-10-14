@@ -1,7 +1,7 @@
 #ifndef STOP_WAIT_RDT_RECEIVER_H
 #define STOP_WAIT_RDT_RECEIVER_H
 #include "RdtReceiver.h"
-class TCPReceiver : public TCPReceiver
+class TCPReceiver : public RdtReceiver
 {
 private:
 	int expectSequenceNumberRcvd;	// 期待收到的下一个报文序号

@@ -2,7 +2,7 @@
 #include "Global.h"
 #include "StopWaitRdtSender.h"
 
-TCPSender::TCPSender() : WINDOW_SIZE(4), base(0), nextSeqNum(0), numOfPacInWin(0), countdown(0), curAck(-1), lastAck(-1), waitingState(false)
+TCPSender::TCPSender() : base(1), nextSeqNum(1), waitingState(false), numOfPacInWin(0)
 {
 }
 
@@ -17,76 +17,90 @@ bool TCPSender::getWaitingState()
 
 bool TCPSender::send(const Message &message)
 {
-	if (nextSeqNum >= base + WINDOW_SIZE)
+	if (nextSeqNum < base + Configuration::WINDOW_SIZE)
 	{
-		this->waitingState = true;
-		// 发送窗口已满，不能发送数据报
-		return false;
+		waitingState = false;
+		sw[numOfPacInWin].seqnum = nextSeqNum;
+		sw[numOfPacInWin].acknum = -1; // 忽略该字段
+		sw[numOfPacInWin].checksum = 0;
+		memcpy(sw[numOfPacInWin].payload, message.data, sizeof(message.data));
+		sw[numOfPacInWin].checksum = pUtils->calculateCheckSum(sw[numOfPacInWin]);
+
+		pUtils->printPacket("发送方发送报文", sw[numOfPacInWin]);
+		if (base == nextSeqNum) // 发送窗口为空，启动定时器
+		{
+			pns->startTimer(SENDER, Configuration::TIME_OUT, sw[numOfPacInWin].seqnum);
+		}
+		pns->sendToNetworkLayer(RECEIVER, sw[numOfPacInWin]);
+		numOfPacInWin++;
+
+		if (numOfPacInWin > Configuration::WINDOW_SIZE)
+		{
+			waitingState = true;
+		}
+
+		nextSeqNum++;
+		return true;
 	}
 	else
 	{
-		this->waitingState = false;
-		this->sw[nextSeqNum % WINDOW_SIZE].seqnum = nextSeqNum;
-		this->sw[nextSeqNum % WINDOW_SIZE].acknum = -1; // 忽略该字段
-		this->sw[nextSeqNum % WINDOW_SIZE].checksum = 0;
-		memcpy(this->sw[nextSeqNum % WINDOW_SIZE].payload, message.data, sizeof(message.data));
-		this->sw[nextSeqNum % WINDOW_SIZE].checksum = pUtils->calculateCheckSum(this->sw[nextSeqNum % WINDOW_SIZE]);
-
-		pUtils->printPacket("发送方发送报文", this->sw[nextSeqNum % WINDOW_SIZE]);
-		if (base == nextSeqNum) // 发送窗口为空，启动定时器
-		{
-			pns->startTimer(SENDER, Configuration::TIME_OUT, nextSeqNum);
-		}
-
-		this->nextSeqNum++;
-		this->numOfPacInWin++;
-		return true;
+		waitingState = true;
+		// 发送窗口已满，不能发送数据报
+		return false;
 	}
 }
 
 void TCPSender::receive(const Packet &ackPkt)
 {
-	if (this->numOfPacInWin == 0)
+	if (numOfPacInWin > 0)
 	{
-		return;
-	}
-	int checkSum = pUtils->calculateCheckSum(ackPkt);
-	cout << "curAck: " << curAck << " lastAck: " << lastAck << endl;
-	if (checkSum == ackPkt.checksum && ackPkt.acknum >= base)
-	{
-		pUtils->printPacket("发送方正确收到确认报文", ackPkt);
-		this->curAck = ackPkt.acknum;
-		if (this->curAck == this->lastAck)
+		int checkSum = pUtils->calculateCheckSum(ackPkt);
+		cout << "curAck: " << curAck << " lastAck: " << lastAck << endl;
+		if (checkSum == ackPkt.checksum && ackPkt.acknum >= base)
 		{
-			this->countdown++;
-		}
-		else
-		{
-			this->countdown = 1;
-			this->lastAck = this->curAck;
-		}
-		if (this->countdown == 3)
-		{ // 收到3个重复ACK，快速重传
-			pUtils->printPacket("发送方收到3个重复ACK，快速重传上次发送的报文", this->sw[base % WINDOW_SIZE]);
-			pns->stopTimer(SENDER, this->sw[base % WINDOW_SIZE].seqnum);
-			pns->startTimer(SENDER, Configuration::TIME_OUT, this->sw[base % WINDOW_SIZE].seqnum);
-			pns->sendToNetworkLayer(SENDER, this->sw[base % WINDOW_SIZE]);
-			this->countdown = 0;
-		}
-		if (this->curAck >= this->base)
-		{
-			this->base = this->curAck + 1;
-			this->numOfPacInWin = this->nextSeqNum - this->base;
-			if (this->base == this->nextSeqNum)
-			{ // 发送窗口为空，停止定时器
-				pns->stopTimer(SENDER, ackPkt.acknum);
-				this->waitingState = false;
+			if (ackPkt.acknum == sw[0].seqnum)
+			{
+				countdown++;
+				if (countdown == 4)
+				{
+					pns->stopTimer(SENDER, sw[0].seqnum);
+					pns->sendToNetworkLayer(RECEIVER, sw[0]);
+					pUtils->printPacket("发送方快速重传报文", sw[0]);
+					pns->startTimer(SENDER, Configuration::TIME_OUT, sw[0].seqnum);
+					cout << "冗余ACK为acknum: " << ackPkt.acknum << endl;
+					countdown = 0;
+					return;
+				}
 			}
 			else
-			{ // 发送窗口不为空，重启定时器
-				pns->stopTimer(SENDER, this->sw[base % WINDOW_SIZE].seqnum);
-				pns->startTimer(SENDER, Configuration::TIME_OUT, this->sw[base % WINDOW_SIZE].seqnum);
-				this->waitingState = false;
+			{
+				countdown = 1;
+			}
+
+			if (countdown != 1)
+				return;
+
+			else
+			{
+				int num = ackPkt.acknum - base;
+				base = ackPkt.acknum;
+				pUtils->printPacket("发送方收到确认报文", ackPkt);
+
+				if (this->base == this->nextSeqNum) // 如果确认的是发送窗口最后一个报文的ACK，那么代表sw此时无报文
+				{
+					pns->stopTimer(SENDER, sw[0].seqnum);
+				}
+				else // 如果确认的不是发送窗口最后一个报文的ACK，那么代表sw此时还有报文
+				{
+					pns->stopTimer(SENDER, sw[0].seqnum);
+					pns->startTimer(SENDER, Configuration::TIME_OUT, sw[num].seqnum);
+				}
+				for (int i = 0; i < numOfPacInWin - num; i++) // 窗口报文前移
+				{
+					sw[i] = sw[i + num];
+					cout << "now sw[i].seqnum: " << sw[i].seqnum << endl;
+				}
+				numOfPacInWin -= num;
 			}
 		}
 	}
@@ -94,8 +108,8 @@ void TCPSender::receive(const Packet &ackPkt)
 
 void TCPSender::timeoutHandler(int seqNum)
 {
-	pUtils->printPacket("发送方定时器时间到，重发上次发送的报文", this->sw[base % WINDOW_SIZE]);
-	pns->stopTimer(SENDER, seqNum);
-	pns->startTimer(SENDER, Configuration::TIME_OUT, seqNum);
-	pns->sendToNetworkLayer(SENDER, this->sw[base % WINDOW_SIZE]);
+	pUtils->printPacket("发送方定时器时间到，重发上次发送的报文", sw[0]);
+	pns->stopTimer(SENDER, sw[0].seqnum);
+	pns->startTimer(SENDER, Configuration::TIME_OUT, sw[0].seqnum);
+	pns->sendToNetworkLayer(RECEIVER, sw[0]);
 }
