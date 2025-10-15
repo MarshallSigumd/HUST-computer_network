@@ -104,6 +104,9 @@ void TCPSender::receive(const Packet &ackPkt)
 			}
 		}
 	}
+	cout << "接收后窗口状态: ";
+	print();
+	cout << endl;
 }
 
 void TCPSender::timeoutHandler(int seqNum)
@@ -113,3 +116,45 @@ void TCPSender::timeoutHandler(int seqNum)
 	pns->startTimer(SENDER, Configuration::TIME_OUT, sw[0].seqnum);
 	pns->sendToNetworkLayer(RECEIVER, sw[0]);
 }
+
+void TCPSender::print()
+{
+	printf("TCPSender: [base=%d, nextSeqNum=%d] ", base, nextSeqNum);
+	cout << "窗口从0到seqSize-1: ";
+	for (int i = 0; i < Configuration::WINDOW_SIZE + 1; i++)
+	{
+		cout << i;
+		if (i == base)
+			cout << "[ ";
+		if (i == (base + Configuration::WINDOW_SIZE) % (Configuration::WINDOW_SIZE + 1))
+			cout << "] ";
+		if (i < base || i >= nextSeqNum)
+			cout << "可用 ";
+		else if (i >= base && i < nextSeqNum)
+			cout << "发送未确认 ";
+	}
+	cout << endl;
+}
+// void SRSender::print()
+// {
+// 	printf("SRSender: [base=%d, nextSeqNum=%d] ", base, nextSeqNum);
+// 	cout << "窗口从0到seqSize-1: ";
+// 	for (int i = 0; i < seqSize; i++)
+// 	{
+// 		cout << i;
+// 		if (i == base)
+// 			cout << "[ ";
+// 		if (i == (base + windowSize) % seqSize)
+// 			cout << "] ";
+// 		if (isInWindow(i) == false)
+// 			cout << "不可用 ";
+
+// 		if (isInWindow(i) && i >= nextSeqNum)
+// 			cout << "可用未发送 ";
+// 		else if (isInWindow(i) && i < nextSeqNum)
+// 			cout << "发送未确认 ";
+// 		else if (isInWindow(i) && status[i] == true)
+// 			cout << "发送并确认 ";
+// 	}
+// 	cout << endl;
+// }
