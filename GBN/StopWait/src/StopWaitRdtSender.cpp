@@ -72,6 +72,9 @@ void GBNSender::receive(const Packet &ackPkt)
 			this->numberOfPacketsInWindow -= num; // 发送窗口中剩余的报文数
 		}
 	}
+	cout << "接收后窗口状态: ";
+	print();
+	cout << endl;
 }
 
 void GBNSender::timeoutHandler(int seqNum)
@@ -84,4 +87,39 @@ void GBNSender::timeoutHandler(int seqNum)
 		pUtils->printPacket("发送方重发报文:", this->sw[i]);
 		pns->sendToNetworkLayer(RECEIVER, this->sw[i]);
 	} // 重传窗口中所有报文，包括已经收到确认的报文
+}
+
+// void SRReceiver::print()
+// {
+// 	printf("SRReceiver: [base=%d] ", base);
+// 	cout << "窗口从0到seqSize-1: ";
+// 	for (int i = 0; i < seqSize; i++)
+// 	{
+// 		cout << i;
+// 		if (i == base)
+// 			cout << "[ ";
+// 		if (i == (base + windowSize) % seqSize)
+// 			cout << "] ";
+// 		if (isInWindow(i) == false)
+// 			cout << "不可用 ";
+// 		else if (isInWindow(i) && bufStatus[i] == false)
+// 			cout << "可用未收到 ";
+// 		else if (isInWindow(i) && bufStatus[i] == true)
+// 			cout << "收到未交付 ";
+// 	}
+// 	cout << endl;
+// }
+void GBNSender::print()
+{
+	printf("GBN Sender: base=%d nextSeqNum=%d window_size=%d occupied=%d\n", base, nextSeqNum, Configuration::len, numberOfPacketsInWindow);
+	// 打印窗口内报文序号
+	if (numberOfPacketsInWindow > 0)
+	{
+		printf("Window contains seq: ");
+		for (int s = base; s < nextSeqNum; ++s)
+		{
+			printf("%d ", s);
+		}
+		printf("\n");
+	}
 }
